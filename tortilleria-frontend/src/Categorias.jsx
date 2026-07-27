@@ -10,7 +10,7 @@ function Categorias() {
   const [editingId, setEditingId] = useState(null);
 
   const cargarCategorias = () => {
-    fetch('backend-production-db840.up.railway.app/api/categorias/')
+    fetch('http://backend-production-db840.up.railway.app/api/categorias/')
       .then((res) => res.json())
       .then((data) => setCategorias(data))
       .catch((err) => console.error("Error al cargar categorías:", err));
