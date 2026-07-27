@@ -131,7 +131,7 @@ function App() {
   // Eliminar producto
   const handleDelete = (id) => {
     if (window.confirm('¿Estás seguro de eliminar este producto?')) {
-      fetch(`http://localhost:5000/api/productos/${id}`, {
+      fetch(`http://backend-production-db840.up.railway.app/api/productos/${id}`, {
         method: 'DELETE'
       })
         .then((res) => res.json())

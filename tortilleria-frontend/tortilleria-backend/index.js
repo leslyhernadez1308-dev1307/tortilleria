@@ -8,11 +8,11 @@ app.use(express.json());
 
 // 1. Conexión a la base de datos de Railway
 const db = mysql.createConnection({
-  host: 'sakura.proxy.rlwy.net',
-  user: 'root',
-  password: 'blNhYZMjQlUAUKIfiAnyrWJzZexSOwZx',
-  database: 'railway',
-  port: 38717
+  MYSQLHOST: 'mysql.railway.internal',
+  MYSQLUSER: 'root',
+  MYSQLPASSWORD: 'blNhYZMjQlUAUKIfiAnyrWJzZexSOwZx',
+  MYSQLDATABASE: 'railway',
+  MYSQLPORT: 38717
 });
 
 db.connect((err) => {
