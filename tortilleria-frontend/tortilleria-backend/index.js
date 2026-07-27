@@ -6,20 +6,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 1. Conexión a la base de datos de XAMPP
+// 1. Conexión a la base de datos de Railway
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',      // Usuario por defecto en XAMPP
-  password: '',      // Contraseña por defecto (vacía)
-  database: 'tortilleria_db'
+  host: 'sakura.proxy.rlwy.net',
+  user: 'root',
+  password: 'blNhYZMjQlUAUKIfiAnyrWJzZexSOwZx',
+  database: 'railway',
+  port: 38717
 });
 
 db.connect((err) => {
   if (err) {
-    console.error('Error al conectar a MySQL:', err);
+    console.error('Error al conectar a MySQL en Railway:', err);
     return;
   }
-  console.log('✅ Conectado exitosamente a la base de datos MySQL (XAMPP)');
+  console.log('✅ Conectado exitosamente a la base de datos MySQL en la nube');
 });
 
 // 2. Rutas de la API (Endpoints)
@@ -49,34 +50,6 @@ app.post('/api/productos', (req, res) => {
       return res.status(500).json({ error: err.message });
     }
     res.json({ message: 'Producto agregado exitosamente', id: result.insertId });
-  });
-});
-
-// 🛠️ RUTA AGREGADA: Actualizar un producto existente
-app.put('/api/productos/:id', (req, res) => {
-  const { id } = req.params;
-  const { nombre, precio, categoria_id, proveedor_id } = req.body;
-  const sql = 'UPDATE producto SET nombre = ?, precio = ?, categoria_id = ?, proveedor_id = ? WHERE id = ?';
-
-  db.query(sql, [nombre, precio, categoria_id, proveedor_id, id], (err, result) => {
-    if (err) {
-      console.error('Error MySQL al actualizar producto:', err);
-      return res.status(500).json({ error: err.message });
-    }
-    res.json({ message: 'Producto actualizado exitosamente' });
-  });
-});
-
-app.delete('/api/productos/:id', (req, res) => {
-  const { id } = req.params;
-  const sql = 'DELETE FROM producto WHERE id = ?';
-
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      console.error('Error MySQL al eliminar producto:', err);
-      return res.status(500).json({ error: err.message });
-    }
-    res.json({ message: 'Producto eliminado exitosamente' });
   });
 });
 
@@ -379,8 +352,8 @@ app.delete('/api/pedidos/:id', (req, res) => {
   });
 });
 
-// 3. Iniciar el servidor en el puerto 5000
-const PORT = 5000;
+// 3. Iniciar el servidor con el puerto dinámico de Railway
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
+  console.log(`🚀 Servidor ejecutándose en el puerto ${PORT}`);
 });
