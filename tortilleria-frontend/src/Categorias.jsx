@@ -10,7 +10,7 @@ function Categorias() {
   const [editingId, setEditingId] = useState(null);
 
   const cargarCategorias = () => {
-    fetch('http://localhost:5000/api/categorias')
+    fetch('backend-production-db840.up.railway.app/api/categorias/')
       .then((res) => res.json())
       .then((data) => setCategorias(data))
       .catch((err) => console.error("Error al cargar categorías:", err));
@@ -35,8 +35,8 @@ function Categorias() {
     };
 
     const url = editingId 
-      ? `http://localhost:5000/api/categorias/${editingId}` 
-      : 'http://localhost:5000/api/categorias';
+      ? `http://backend-production-db840.up.railway.app/api/categorias/${editingId}` 
+      : 'http://backend-production-db840.up.railway.app/api/categorias/';
     
     const method = editingId ? 'PUT' : 'POST';
 
@@ -86,7 +86,7 @@ function Categorias() {
   // Eliminar categoría
   const handleDelete = (id) => {
     if (window.confirm('¿Estás seguro de eliminar esta categoría?')) {
-      fetch(`http://localhost:5000/api/categorias/${id}`, {
+      fetch(`backend-production-db840.up.railway.app/api/categorias/${id}`, {
         method: 'DELETE'
       })
         .then((res) => res.json())

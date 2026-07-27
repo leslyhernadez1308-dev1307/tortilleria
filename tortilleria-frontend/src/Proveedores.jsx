@@ -11,7 +11,7 @@ function Proveedores() {
   const [editingId, setEditingId] = useState(null);
 
   const cargarProveedores = () => {
-    fetch('http://localhost:5000/api/proveedores')
+    fetch('http://backend-production-db840.up.railway.app/api/proveedores/')
       .then((res) => res.json())
       .then((data) => setProveedores(data))
       .catch((err) => console.error("Error al cargar proveedores:", err));
@@ -37,8 +37,8 @@ function Proveedores() {
     };
 
     const url = editingId 
-      ? `http://localhost:5000/api/proveedores/${editingId}` 
-      : 'http://localhost:5000/api/proveedores';
+      ? `http://backend-production-db840.up.railway.app/api/proveedores/${editingId}` 
+      : 'http://backend-production-db840.up.railway.app/api/proveedores';
     
     const method = editingId ? 'PUT' : 'POST';
 
@@ -91,7 +91,7 @@ function Proveedores() {
   // Eliminar proveedor
   const handleDelete = (id) => {
     if (window.confirm('¿Estás seguro de eliminar este proveedor?')) {
-      fetch(`http://localhost:5000/api/proveedores/${id}`, {
+      fetch(`http://backend-production-db840.up.railway.app/api/proveedores/${id}`, {
         method: 'DELETE'
       })
         .then((res) => res.json())

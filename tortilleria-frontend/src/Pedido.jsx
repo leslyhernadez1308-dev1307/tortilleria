@@ -12,7 +12,7 @@ function Pedido() {
   const [editingId, setEditingId] = useState(null);
 
   const cargarDatos = () => {
-    fetch('http://localhost:5000/api/clientes')
+    fetch('http://backend-production-db840.up.railway.app/api/clientes/')
       .then((res) => res.json())
       .then((data) => {
         setClientes(data);
@@ -20,7 +20,7 @@ function Pedido() {
       })
       .catch((err) => console.error("Error al cargar clientes:", err));
 
-    fetch('http://localhost:5000/api/productos')
+    fetch('http://backend-production-db840.up.railway.app/api/productos/')
       .then((res) => res.json())
       .then((data) => {
         setProductos(data);
@@ -30,7 +30,7 @@ function Pedido() {
       })
       .catch((err) => console.error("Error al cargar productos:", err));
 
-    fetch('http://localhost:5000/api/pedidos')
+    fetch('http://backend-production-db840.up.railway.app/api/pedidos/')
       .then((res) => res.json())
       .then((data) => setPedidos(data))
       .catch((err) => console.error("Error al cargar pedidos:", err));
@@ -105,8 +105,8 @@ function Pedido() {
     };
 
     const url = editingId 
-      ? `http://localhost:5000/api/pedidos/${editingId}` 
-      : 'http://localhost:5000/api/pedidos';
+      ? `http://backend-production-db840.up.railway.app/api/pedidos/${editingId}` 
+      : 'http://backend-production-db840.up.railway.app/api/pedidos';
     
     const method = editingId ? 'PUT' : 'POST';
 
@@ -155,7 +155,7 @@ function Pedido() {
 
   const handleDelete = (id) => {
     if (window.confirm('¿Estás seguro de eliminar este pedido?')) {
-      fetch(`http://localhost:5000/api/pedidos/${id}`, {
+      fetch(`http://backend-production-db840.up.railway.app/api/pedidos/${id}`, {
         method: 'DELETE'
       })
         .then((res) => res.json())

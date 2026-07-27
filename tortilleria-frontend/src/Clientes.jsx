@@ -11,7 +11,7 @@ function Clientes() {
   const [editingId, setEditingId] = useState(null);
 
   const cargarClientes = () => {
-    fetch('http://localhost:5000/api/clientes')
+    fetch('http://backend-production-db840.up.railway.app/api/clientes/')
       .then((res) => res.json())
       .then((data) => setClientes(data))
       .catch((err) => console.error("Error al cargar clientes:", err));
@@ -37,8 +37,8 @@ function Clientes() {
     };
 
     const url = editingId 
-      ? `http://localhost:5000/api/clientes/${editingId}` 
-      : 'http://localhost:5000/api/clientes';
+      ? `http://backend-production-db840.up.railway.app/api/clientes/${editingId}` 
+      : 'http://backend-production-db840.up.railway.app/api/clientes/';
     
     const method = editingId ? 'PUT' : 'POST';
 
@@ -91,7 +91,7 @@ function Clientes() {
   // Eliminar cliente
   const handleDelete = (id) => {
     if (window.confirm('¿Estás seguro de eliminar este cliente?')) {
-      fetch(`http://localhost:5000/api/clientes/${id}`, {
+      fetch(`http://backend-production-db840.up.railway.app/api/clientes/${id}`, {
         method: 'DELETE'
       })
         .then((res) => res.json())

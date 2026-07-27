@@ -28,7 +28,7 @@ function App() {
   // Cargar datos necesarios para el catálogo y selectores de Productos
   const cargarDatosProductos = () => {
     setCargando(true);
-    fetch('http://localhost:5000/api/productos')
+    fetch('http://backend-production-db840.up.railway.app/api/productos/')
       .then((res) => res.json())
       .then((data) => {
         setProductos(data);
@@ -39,14 +39,14 @@ function App() {
         setCargando(false);
       });
 
-    fetch('http://localhost:5000/api/categorias')
+    fetch('http://backend-production-db840.up.railway.app/api/categorias/')
       .then((res) => res.json())
       .then((data) => {
         setCategorias(data);
         if (data.length > 0 && !categoriaId) setCategoriaId(data[0].id);
       });
 
-    fetch('http://localhost:5000/api/proveedores')
+    fetch('http://backend-production-db840.up.railway.app/api/proveedores/')
       .then((res) => res.json())
       .then((data) => {
         setProveedores(data);
@@ -75,8 +75,8 @@ function App() {
     };
 
     const url = editingId 
-      ? `http://localhost:5000/api/productos/${editingId}` 
-      : 'http://localhost:5000/api/productos';
+      ? `http://backend-production-db840.up.railway.app/api/productos/${editingId}` 
+      : 'http://backend-production-db840.up.railway.app/api/productos/';
     
     const method = editingId ? 'PUT' : 'POST';
 

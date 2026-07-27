@@ -19,7 +19,7 @@ function Productos() {
 
   const cargarDatos = () => {
     setCargando(true);
-    fetch('http://localhost:5000/api/productos')
+    fetch('http://backend-production-db840.up.railway.app/api/productos/')
       .then((res) => res.json())
       .then((data) => {
         setProductos(data);
@@ -30,14 +30,14 @@ function Productos() {
         setCargando(false);
       });
 
-    fetch('http://localhost:5000/api/categorias')
+    fetch('http://backend-production-db840.up.railway.app/api/categorias/')
       .then((res) => res.json())
       .then((data) => {
         setCategorias(data);
         if (data.length > 0 && !categoriaId) setCategoriaId(data[0].id);
       });
 
-    fetch('http://localhost:5000/api/proveedores')
+    fetch('http://backend-production-db840.up.railway.app/api/proveedores/')
       .then((res) => res.json())
       .then((data) => {
         setProveedores(data);
@@ -65,8 +65,8 @@ function Productos() {
     };
 
     const url = editingId 
-      ? `http://localhost:5000/api/productos/${editingId}` 
-      : 'http://localhost:5000/api/productos';
+      ? `http://backend-production-db840.up.railway.app/api/productos/${editingId}` 
+      : 'http://backend-production-db840.up.railway.app/api/productos/';
     
     const method = editingId ? 'PUT' : 'POST';
 
@@ -117,7 +117,7 @@ function Productos() {
 
   const handleDelete = (id) => {
     if (window.confirm('¿Estás seguro de eliminar este producto?')) {
-      fetch(`http://localhost:5000/api/productos/${id}`, {
+      fetch(`http://backend-production-db840.up.railway.app/api/productos/${id}`, {
         method: 'DELETE'
       })
         .then((res) => res.json())
