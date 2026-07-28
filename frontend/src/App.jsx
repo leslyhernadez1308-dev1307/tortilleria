@@ -33,6 +33,7 @@ function App() {
   const cargarDatosProductos = () => {
     setCargando(true);
     
+    // Cargar productos
     fetch(`${API_BASE}/productos`)
       .then((res) => res.json())
       .then((data) => {
@@ -44,6 +45,7 @@ function App() {
         setCargando(false);
       });
 
+    // Cargar categorías
     fetch(`${API_BASE}/categorias`)
       .then((res) => res.json())
       .then((data) => {
@@ -53,6 +55,7 @@ function App() {
       })
       .catch((err) => console.error("Error al cargar categorías:", err));
 
+    // Cargar proveedores
     fetch(`${API_BASE}/proveedores`)
       .then((res) => res.json())
       .then((data) => {
@@ -169,142 +172,111 @@ function App() {
   });
 
   return (
-    <div className="min-h-screen bg-[#F7F5EE] p-6 font-sans text-[#36452F]">
+    <div className="min-h-screen bg-[#F9F8F6] p-4 md:p-8 font-sans text-[#36452F] flex flex-col items-center">
       {/* Encabezado Principal */}
-      <header className="max-w-5xl mx-auto mb-8 text-center bg-white p-6 rounded-2xl shadow-sm border border-[#EAE5D9]">
-        <h1 className="text-4xl font-black text-[#36452F] tracking-tight mb-1">
-          🌽 Tortillería "La Tradicional"
+      <header className="w-full max-w-5xl mx-auto mb-8 text-center bg-white p-6 md:p-8 rounded-2xl shadow-md border border-[#EAE5D9]">
+        <h1 className="text-3xl md:text-4xl font-bold text-[#36452F] tracking-tight mb-2 flex items-center justify-center gap-3">
+          <span>🌽</span> Tortillería "La Tradicional"
         </h1>
-        <p className="text-[#557345] font-medium">Sistema de Gestión e Inventario Dinámico</p>
+        <p className="text-[#557345] font-semibold text-sm md:text-base">Sistema de Gestión e Inventario Dinámico</p>
         
         {/* Navegación por Pestañas */}
-        <div className="flex justify-center gap-3 mt-6 flex-wrap">
-          <button
-            onClick={() => setPestaña('inicio')}
-            className={`px-5 py-2.5 rounded-xl font-bold transition-all ${
-              pestaña === 'inicio'
-                ? 'bg-[#557345] text-white shadow-md'
-                : 'bg-[#EAE5D9] text-[#36452F] hover:bg-[#DFD8C9]'
-            }`}
-          >
-            🏠 Inicio
-          </button>
-
-          <button
-            onClick={() => setPestaña('productos')}
-            className={`px-5 py-2.5 rounded-xl font-bold transition-all ${
-              pestaña === 'productos'
-                ? 'bg-[#557345] text-white shadow-md'
-                : 'bg-[#EAE5D9] text-[#36452F] hover:bg-[#DFD8C9]'
-            }`}
-          >
-            📦 Productos
-          </button>
-
-          <button
-            onClick={() => setPestaña('categorias')}
-            className={`px-5 py-2.5 rounded-xl font-bold transition-all ${
-              pestaña === 'categorias'
-                ? 'bg-[#557345] text-white shadow-md'
-                : 'bg-[#EAE5D9] text-[#36452F] hover:bg-[#DFD8C9]'
-            }`}
-          >
-            🏷️ Categorías
-          </button>
-          
-          <button
-            onClick={() => setPestaña('clientes')}
-            className={`px-5 py-2.5 rounded-xl font-bold transition-all ${
-              pestaña === 'clientes'
-                ? 'bg-[#557345] text-white shadow-md'
-                : 'bg-[#EAE5D9] text-[#36452F] hover:bg-[#DFD8C9]'
-            }`}
-          >
-            👥 Clientes
-          </button>
-
-          <button
-            onClick={() => setPestaña('proveedores')}
-            className={`px-5 py-2.5 rounded-xl font-bold transition-all ${
-              pestaña === 'proveedores'
-                ? 'bg-[#557345] text-white shadow-md'
-                : 'bg-[#EAE5D9] text-[#36452F] hover:bg-[#DFD8C9]'
-            }`}
-          >
-            🚚 Proveedores
-          </button>
-
-          <button
-            onClick={() => setPestaña('pedidos')}
-            className={`px-5 py-2.5 rounded-xl font-bold transition-all ${
-              pestaña === 'pedidos'
-                ? 'bg-[#557345] text-white shadow-md'
-                : 'bg-[#EAE5D9] text-[#36452F] hover:bg-[#DFD8C9]'
-            }`}
-          >
-            📋 Pedidos
-          </button>
-        </div>
+        <nav aria-label="Navegación principal" className="flex justify-center gap-2 md:gap-3 mt-6 flex-wrap">
+          {[
+            { id: 'inicio', label: '🏠 Inicio' },
+            { id: 'productos', label: '📦 Productos' },
+            { id: 'categorias', label: '🏷️ Categorías' },
+            { id: 'clientes', label: '👥 Clientes' },
+            { id: 'proveedores', label: '🚚 Proveedores' },
+            { id: 'pedidos', label: '📋 Pedidos' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setPestaña(tab.id)}
+              className={`px-4 md:px-5 py-2.5 rounded-xl font-bold transition-all text-sm border shadow-sm ${
+                pestaña === tab.id
+                  ? 'bg-[#557345] text-white border-[#557345]'
+                  : 'bg-white text-[#36452F] border-[#EAE5D9] hover:bg-gray-100'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </nav>
       </header>
 
       {/* Vistas dinámicas */}
-      <main className="max-w-5xl mx-auto">
+      <main className="w-full max-w-5xl mx-auto space-y-8">
         {pestaña === 'inicio' && <Inicio cambiarPestaña={setPestaña} />}
 
         {/* Vista: PRODUCTOS */}
         {pestaña === 'productos' && (
-          <div className="space-y-8">
-            <div className="bg-white p-6 rounded-2xl shadow-md border border-[#EAE5D9]">
-              <h2 className="text-2xl font-bold text-[#36452F] mb-4 border-b border-[#EAE5D9] pb-2 flex justify-between items-center">
-                <span>{editingId ? '✏️ Editar Producto' : '➕ Agregar Nuevo Producto'}</span>
+          <div className="space-y-8 pb-12 w-full">
+            <div className="bg-white shadow-md rounded-2xl p-6 md:p-8 border border-[#EAE5D9] w-full">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b border-[#EAE5D9] gap-4">
+                <div>
+                  <h2 className="text-xl md:text-2xl font-bold text-[#36452F] flex items-center gap-3">
+                    <span className="p-2 bg-[#EAE5D9] text-[#557345] rounded-xl text-lg">📦</span> 
+                    {editingId ? 'Actualizar Información de Producto' : 'Módulo de Registro de Productos'}
+                  </h2>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {editingId ? `Modificando producto ID: #${editingId}` : 'Ingrese los datos generales del nuevo producto para el inventario.'}
+                  </p>
+                </div>
                 {editingId && (
-                  <span className="text-xs bg-[#EAE5D9] text-[#36452F] px-3 py-1 rounded-full uppercase tracking-wider font-semibold">
+                  <span className="bg-[#EAE5D9] text-[#36452F] font-bold text-xs px-3.5 py-1.5 rounded-full uppercase tracking-wider">
                     Modo Edición Activado
                   </span>
                 )}
-              </h2>
+              </div>
 
               {mensaje && (
-                <div className="mb-4 p-3 bg-green-100 text-green-800 font-bold rounded-lg border border-green-200">
-                  {mensaje}
+                <div className="mb-6 p-4 bg-emerald-50 text-emerald-800 font-bold rounded-xl border border-emerald-200 text-sm flex items-center gap-2">
+                  <span>ℹ️</span> {mensaje}
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Nombre del Producto</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                    Nombre del Producto
+                  </label>
                   <input
                     type="text"
                     placeholder="Ej. Totopos Crujientes 500g"
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
-                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#557345] focus:outline-none bg-white"
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#557345] focus:outline-none bg-white text-[#36452F]"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Precio ($ MXN)</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                    Precio ($ MXN)
+                  </label>
                   <input
                     type="number"
                     step="0.50"
                     placeholder="Ej. 18.50"
                     value={precio}
                     onChange={(e) => setPrecio(e.target.value)}
-                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#557345] focus:outline-none bg-white"
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#557345] focus:outline-none bg-white text-[#36452F]"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Categoría</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                    Categoría
+                  </label>
                   <select
                     value={categoriaId}
                     onChange={(e) => setCategoriaId(e.target.value)}
-                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#557345] focus:outline-none bg-white"
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#557345] focus:outline-none bg-white text-[#36452F]"
                   >
                     {categorias.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
+                      <option key={cat.id} value={cat.id} className="bg-white text-[#36452F]">
                         {cat.nombre}
                       </option>
                     ))}
@@ -312,99 +284,113 @@ function App() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Proveedor</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                    Proveedor
+                  </label>
                   <select
                     value={proveedorId}
                     onChange={(e) => setProveedorId(e.target.value)}
-                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#557345] focus:outline-none bg-white"
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#557345] focus:outline-none bg-white text-[#36452F]"
                   >
                     {proveedores.map((prov) => (
-                      <option key={prov.id} value={prov.id}>
+                      <option key={prov.id} value={prov.id} className="bg-white text-[#36452F]">
                         {prov.nombre} {prov.empresa ? `(${prov.empresa})` : ''}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                <div className="md:col-span-2 mt-2 flex gap-3">
+                <div className="md:col-span-2 flex flex-col sm:flex-row items-center gap-4 pt-4 border-t border-[#EAE5D9]">
                   <button
                     type="submit"
-                    className={`flex-1 font-bold py-3 rounded-xl shadow transition-colors text-white ${
-                      editingId ? 'bg-[#445C37] hover:bg-[#34472A]' : 'bg-[#557345] hover:bg-[#445C37]'
+                    className={`w-full sm:flex-1 py-3 px-6 rounded-xl text-white font-bold transition-colors shadow text-sm ${
+                      editingId 
+                        ? 'bg-[#445C37] hover:bg-[#34472A]' 
+                        : 'bg-[#557345] hover:bg-[#445C37]'
                     }`}
                   >
-                    {editingId ? 'Actualizar Producto' : 'Guardar producto'}
+                    <span>{editingId ? '💾 ' : '➕ '}</span>
+                    {editingId ? 'Actualizar Datos del Producto' : 'Guardar Producto en el Sistema'}
                   </button>
 
                   {editingId && (
                     <button
                       type="button"
                       onClick={handleCancelEdit}
-                      className="px-6 bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 rounded-xl shadow transition-colors"
+                      className="w-full sm:w-auto px-6 py-3 bg-gray-400 hover:bg-gray-500 text-white rounded-xl font-bold transition-colors text-sm shadow"
                     >
-                      Cancelar
+                      Cancelar Edición
                     </button>
                   )}
                 </div>
               </form>
             </div>
 
-            <div className="space-y-4">
-              {/* Encabezado del catálogo con Buscador y Lupa integrados */}
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[#EAE5D9] pb-3">
-                <h2 className="text-2xl font-bold text-[#36452F]">
-                  📦 Catálogo de Productos Registrados
-                </h2>
+            {/* Listado de Productos */}
+            <div className="bg-white shadow-md rounded-2xl p-6 md:p-8 border border-[#EAE5D9] w-full space-y-6">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-[#EAE5D9]">
+                <div>
+                  <h2 className="text-xl md:text-2xl font-bold text-[#36452F] flex items-center gap-2">
+                    <span>📋</span> Catálogo de Productos Registrados
+                  </h2>
+                  <p className="text-sm text-gray-500 mt-1">Control general de artículos e inventario activo.</p>
+                </div>
 
-                {/* Barra con icono de lupa */}
-                <div className="relative w-full md:w-72">
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-                    🔍
-                  </span>
-                  <input
-                    type="text"
-                    placeholder="Buscar producto, categoría..."
-                    value={busqueda}
-                    onChange={(e) => setBusqueda(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 bg-white border border-[#EAE5D9] rounded-xl focus:ring-2 focus:ring-[#557345] focus:outline-none text-sm shadow-sm"
-                  />
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
+                  {/* Barra de Búsqueda */}
+                  <div className="relative w-full sm:w-72">
+                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                      🔍
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="Buscar producto, categoría..."
+                      value={busqueda}
+                      onChange={(e) => setBusqueda(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 bg-white border border-[#EAE5D9] rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#557345] focus:outline-none text-[#36452F] shadow-sm"
+                    />
+                  </div>
+
+                  <div className="bg-[#EAE5D9] text-[#36452F] font-bold text-xs px-4 py-3 rounded-xl text-center whitespace-nowrap">
+                    Total: {productosFiltrados.length}
+                  </div>
                 </div>
               </div>
 
               {cargando ? (
-                <p className="text-[#557345] font-medium">Cargando datos...</p>
+                <p className="text-center py-12 text-gray-500 font-medium text-sm">Cargando datos del sistema...</p>
               ) : productos.length === 0 ? (
-                <p className="text-gray-500 bg-white p-4 rounded-xl border border-[#EAE5D9]">No hay productos registrados todavía.</p>
+                <p className="text-center py-12 text-gray-500 font-medium text-sm">No hay productos registrados todavía.</p>
               ) : productosFiltrados.length === 0 ? (
-                <p className="text-gray-500 bg-white p-4 rounded-xl border border-[#EAE5D9]">No se encontraron productos que coincidan con la búsqueda.</p>
+                <p className="text-center py-12 text-gray-500 font-medium text-sm">No se encontraron productos que coincidan con la búsqueda.</p>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {productosFiltrados.map((prod) => (
-                    <div key={prod.id} className="bg-white p-5 rounded-xl shadow-md border border-[#EAE5D9] hover:shadow-lg transition-shadow flex flex-col justify-between">
-                      <div>
-                        <div className="flex justify-between items-start mb-3">
-                          <h3 className="text-lg font-bold text-[#36452F]">{prod.nombre}</h3>
-                          <span className="bg-[#EAE5D9] text-[#36452F] font-black px-3 py-1 rounded-full text-sm">
+                    <div key={prod.id} className="p-5 border border-[#EAE5D9] rounded-xl bg-white shadow-sm hover:border-[#557345] transition-colors flex flex-col justify-between space-y-4">
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-start gap-2">
+                          <h3 className="font-bold text-[#36452F] text-lg">{prod.nombre}</h3>
+                          <span className="bg-[#EAE5D9] text-[#36452F] border border-[#EAE5D9] font-bold px-3 py-1 rounded-lg text-xs whitespace-nowrap">
                             ${prod.precio} MXN
                           </span>
                         </div>
-                        <div className="text-sm text-gray-600 space-y-1 mb-4">
-                          <p><span className="font-semibold text-gray-700">Categoría:</span> {prod.categoria || 'Sin asignación'}</p>
-                          <p><span className="font-semibold text-gray-700">Proveedor:</span> {prod.proveedor || 'Sin asignación'}</p>
+                        <div className="text-sm text-gray-600 space-y-1">
+                          <p><span className="font-bold text-[#36452F]">Categoría:</span> {prod.categoria || 'Sin asignación'}</p>
+                          <p><span className="font-bold text-[#36452F]">Proveedor:</span> {prod.proveedor || 'Sin asignación'}</p>
                         </div>
                       </div>
 
-                      {/* Botones de Acción (Editar / Eliminar) */}
-                      <div className="flex gap-2 pt-3 border-t border-gray-100">
+                      {/* Botones de Acción */}
+                      <div className="flex gap-2 pt-3 border-t border-[#EAE5D9]">
                         <button
                           onClick={() => handleEdit(prod)}
-                          className="flex-1 bg-[#557345] hover:bg-[#445C37] text-white py-1.5 rounded-lg text-sm font-bold transition-colors shadow-sm"
+                          className="flex-1 bg-[#557345] hover:bg-[#445C37] text-white py-2 px-3 rounded-lg text-xs font-bold transition-colors shadow-sm"
                         >
-                          ✏️ Editar
+                          ✏️ Modificar
                         </button>
                         <button
                           onClick={() => handleDelete(prod.id)}
-                          className="flex-1 bg-red-500 hover:bg-red-600 text-white py-1.5 rounded-lg text-sm font-bold transition-colors shadow-sm"
+                          className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 px-3 rounded-lg text-xs font-bold transition-colors shadow-sm"
                         >
                           🗑️ Eliminar
                         </button>

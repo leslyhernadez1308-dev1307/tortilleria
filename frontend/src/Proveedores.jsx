@@ -121,7 +121,7 @@ function Proveedores() {
   });
 
   return (
-    <div className="space-y-8 w-full text-[#36452F] max-w-4xl mx-auto">
+    <div className="space-y-8 w-full text-[#36452F] max-w-4xl mx-auto pb-12">
       {/* Formulario Estilo Clásico */}
       <div className="bg-white p-6 md:p-8 rounded-2xl shadow-md border border-[#EAE5D9] w-full">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b border-[#EAE5D9] gap-4">

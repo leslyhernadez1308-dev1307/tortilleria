@@ -9,7 +9,7 @@ function Inicio({ cambiarPestaña }) {
           🌽
         </div>
 
-        <h2 className="text-3xl md:text-4xl font-black text-[#36452F] mb-3 tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-bold text-[#36452F] mb-3 tracking-tight">
           ¡Bienvenido al Sistema de Gestión!
         </h2>
         
