@@ -5,6 +5,10 @@ import Clientes from './Clientes';
 import Categorias from './Categorias';
 import Inicio from './Inicio';
 
+// Manejo dinámico de la URL mediante variable de entorno con respaldo al backend en Railway
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://backend-production-db840.up.railway.app';
+const API_BASE = BASE_URL.endsWith('/api') ? BASE_URL : `${BASE_URL}/api`;
+
 function App() {
   const [pestaña, setPestaña] = useState('inicio');
   const [productos, setProductos] = useState([]);
@@ -28,10 +32,11 @@ function App() {
   // Cargar datos necesarios para el catálogo y selectores de Productos
   const cargarDatosProductos = () => {
     setCargando(true);
-    fetch('http://backend-production-db840.up.railway.app/api/productos/')
+    
+    fetch(`${API_BASE}/productos`)
       .then((res) => res.json())
       .then((data) => {
-        setProductos(data);
+        setProductos(Array.isArray(data) ? data : []);
         setCargando(false);
       })
       .catch((err) => {
@@ -39,19 +44,23 @@ function App() {
         setCargando(false);
       });
 
-    fetch('http://backend-production-db840.up.railway.app/api/categorias/')
+    fetch(`${API_BASE}/categorias`)
       .then((res) => res.json())
       .then((data) => {
-        setCategorias(data);
-        if (data.length > 0 && !categoriaId) setCategoriaId(data[0].id);
-      });
+        const cats = Array.isArray(data) ? data : [];
+        setCategorias(cats);
+        if (cats.length > 0 && !categoriaId) setCategoriaId(cats[0].id);
+      })
+      .catch((err) => console.error("Error al cargar categorías:", err));
 
-    fetch('http://backend-production-db840.up.railway.app/api/proveedores/')
+    fetch(`${API_BASE}/proveedores`)
       .then((res) => res.json())
       .then((data) => {
-        setProveedores(data);
-        if (data.length > 0 && !proveedorId) setProveedorId(data[0].id);
-      });
+        const provs = Array.isArray(data) ? data : [];
+        setProveedores(provs);
+        if (provs.length > 0 && !proveedorId) setProveedorId(provs[0].id);
+      })
+      .catch((err) => console.error("Error al cargar proveedores:", err));
   };
 
   useEffect(() => {
@@ -62,7 +71,7 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!nombre || !precio) {
+    if (!nombre.trim() || !precio) {
       alert('Por favor ingresa un nombre y precio válido');
       return;
     }
@@ -75,8 +84,8 @@ function App() {
     };
 
     const url = editingId 
-      ? `http://backend-production-db840.up.railway.app/api/productos/${editingId}` 
-      : 'http://backend-production-db840.up.railway.app/api/productos/';
+      ? `${API_BASE}/productos/${editingId}` 
+      : `${API_BASE}/productos`;
     
     const method = editingId ? 'PUT' : 'POST';
 
@@ -88,14 +97,14 @@ function App() {
       body: JSON.stringify(productoData)
     })
       .then(async (res) => {
+        const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.error || 'Error en el servidor');
+          throw new Error(data.error || data.message || 'Error en el servidor');
         }
-        return res.json();
+        return data;
       })
-      .then(() => {
-        setMensaje(editingId ? '✅ ¡Producto actualizado exitosamente!' : '✅ ¡Producto guardado exitosamente!');
+      .then((data) => {
+        setMensaje(data.message || (editingId ? '✅ ¡Producto actualizado exitosamente!' : '✅ ¡Producto guardado exitosamente!'));
         setNombre('');
         setPrecio('');
         setEditingId(null);
@@ -131,26 +140,29 @@ function App() {
   // Eliminar producto
   const handleDelete = (id) => {
     if (window.confirm('¿Estás seguro de eliminar este producto?')) {
-      fetch(`http://backend-production-db840.up.railway.app/api/productos/${id}`, {
+      fetch(`${API_BASE}/productos/${id}`, {
         method: 'DELETE'
       })
-        .then((res) => res.json())
-        .then(() => {
-          setMensaje('🗑️ Producto eliminado exitosamente');
+        .then(async (res) => {
+          if (!res.ok) throw new Error('No se pudo eliminar el producto');
+          return res.json();
+        })
+        .then((data) => {
+          setMensaje(data.message || '🗑️ Producto eliminado exitosamente');
           cargarDatosProductos();
           setTimeout(() => setMensaje(''), 4000);
         })
         .catch((err) => {
           console.error("Error al eliminar producto:", err);
-          alert("Error al eliminar el producto");
+          alert(`❌ Error al eliminar el producto: ${err.message}`);
         });
     }
   };
 
   // Filtrar productos según lo escrito en la barra de búsqueda
-  const productosFiltrados = productos.filter((prod) => {
+  const productosFiltrados = (Array.isArray(productos) ? productos : []).filter((prod) => {
     const query = busqueda.toLowerCase();
-    const nombreMatch = prod.nombre?.toLowerCase().includes(query);
+    const nombreMatch = (prod.nombre || '').toLowerCase().includes(query);
     const categoriaMatch = (prod.categoria || prod.categoria_nombre || '').toLowerCase().includes(query);
     const proveedorMatch = (prod.proveedor || prod.proveedor_nombre || prod.proveedor_empresa || '').toLowerCase().includes(query);
     return nombreMatch || categoriaMatch || proveedorMatch;
@@ -266,7 +278,7 @@ function App() {
                     placeholder="Ej. Totopos Crujientes 500g"
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
-                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#557345] focus:outline-none"
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#557345] focus:outline-none bg-white"
                     required
                   />
                 </div>
@@ -279,7 +291,7 @@ function App() {
                     placeholder="Ej. 18.50"
                     value={precio}
                     onChange={(e) => setPrecio(e.target.value)}
-                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#557345] focus:outline-none"
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#557345] focus:outline-none bg-white"
                     required
                   />
                 </div>
